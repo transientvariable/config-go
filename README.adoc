@@ -1,0 +1,20 @@
+= Config
+Matt Nicholls <transientvariable@gmail.com>
+:keywords: Golang,Configuration
+:experimental: true
+:icons: font
+:iconfont-cdn: //cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/fontawesome.min.css
+:imagesdir: docs/image
+:sectanchors: true
+:source-highlighter: prettify
+:toc:
+:toclevels: 3
+:toc-title: Contents
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
