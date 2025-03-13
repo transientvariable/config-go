@@ -14,6 +14,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/timberio/go-datemath"
+	"github.com/transientvariable/sup"
 	"gopkg.in/yaml.v3"
 )
 
@@ -219,8 +220,7 @@ func (c *configuration) String() string {
 	m["file_path"] = c.filePath
 	m["mapping"] = c.mapping
 	m["root"] = c.root
-	//return string(sup.ToJSONFormatted(m))
-	return ""
+	return string(sup.ToJSONFormatted(m))
 }
 
 // Bool retrieves the boolean value for the provided path.
