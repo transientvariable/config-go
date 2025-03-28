@@ -1,5 +1,5 @@
 = config
-Matt Nicholls <transientvariable@gmail.com>
+Matt Nicholls <transientvariable@protonmail.com>
 :keywords: golang,config,configuration
 :experimental: true
 :icons: font
