@@ -11,16 +11,19 @@ import (
 	"sync"
 	"time"
 
+	"github.com/transientvariable/sup"
+
 	"github.com/dustin/go-humanize"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/timberio/go-datemath"
-	"github.com/transientvariable/sup"
 	"gopkg.in/yaml.v3"
 )
 
 const (
 	// The default file path to load when creating a new default configuration.
 	defaultFilePath = `application.yaml`
+
+	defaultRoot = `config`
 
 	// Format string for matching path prefixes to their corresponding slice elements.
 	formatSlicePrefix = `%s\\.#\\d+`
@@ -74,8 +77,10 @@ func Load(options ...func(*Option)) error {
 
 		rawConfig, err := readConfig(filePath)
 		if err != nil {
-			loadErr = err
-			return
+			if !errors.Is(err, os.ErrNotExist) {
+				loadErr = err
+				return
+			}
 		}
 
 		mapping, err := newConfigMap(rawConfig)
@@ -111,7 +116,8 @@ func Load(options ...func(*Option)) error {
 		}
 
 		if config.root == "" {
-			loadErr = errors.New(fmt.Sprintf("configuration: root path is undefined"))
+			config.root = defaultRoot
+			//loadErr = errors.New(fmt.Sprintf("configuration: root path is undefined"))
 		}
 	})
 	return loadErr
@@ -537,7 +543,7 @@ func readConfigAndThen(filePath string, mapConfigFn mapConfigFunc) (map[string]a
 
 	bytes, err := os.ReadFile(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("configuration: could not read file path '%s': %w", filePath, err)
+		return nil, fmt.Errorf("configuration: %w", err)
 	}
 	return mapConfigFn(bytes)
 }
