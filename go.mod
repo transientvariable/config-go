@@ -1,4 +1,4 @@
-module github.com/transientvariable/config
+module github.com/transientvariable/config-go
 
 go 1.24.1
 
@@ -6,7 +6,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/multiformats/go-multiaddr v0.15.0
 	github.com/timberio/go-datemath v0.1.0
-	github.com/transientvariable/sup v0.0.0-20250313190857-7a5fb782b3fa
 	gopkg.in/yaml.v3 v3.0.1
 )
 

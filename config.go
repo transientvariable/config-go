@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/transientvariable/sup"
+	"github.com/transientvariable/support-go"
 
 	"github.com/dustin/go-humanize"
 	"github.com/multiformats/go-multiaddr"
@@ -226,7 +226,7 @@ func (c *configuration) String() string {
 	m["file_path"] = c.filePath
 	m["mapping"] = c.mapping
 	m["root"] = c.root
-	return string(sup.ToJSONFormatted(m))
+	return string(support.ToJSONFormatted(m))
 }
 
 // Bool retrieves the boolean value for the provided path.

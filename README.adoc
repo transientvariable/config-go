@@ -30,7 +30,7 @@ Compact, no frills, configuration library for Go.
 
 [source%nowrap,bash]
 ----
-❯ go get -u github.com/transientvariable/config
+❯ go get -u github.com/transientvariable/config-go
 ----
 
 == License

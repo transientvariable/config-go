@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/transientvariable/sup"
+	"github.com/transientvariable/support-go"
 )
 
 // formatSliceSuffix defines the format string for configuration paths that map to elements of a slice.
@@ -119,7 +119,7 @@ func flatten(path string, value reflect.Value, data map[Path]string) error {
 		reflectedValue = value.String()
 		break
 	default:
-		return fmt.Errorf("unknown value type [%s] for path [%s]\nusing data: %s\n", value, path, sup.ToJSONFormatted(data))
+		return fmt.Errorf("unknown value type [%s] for path [%s]\nusing data: %s\n", value, path, support.ToJSONFormatted(data))
 	}
 
 	data[Path(path)] = reflectedValue
