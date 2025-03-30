@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/transientvariable/support-go"
+	"github.com/transientvariable/anchor"
 
 	"github.com/dustin/go-humanize"
 	"github.com/multiformats/go-multiaddr"

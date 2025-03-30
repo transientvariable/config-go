@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/transientvariable/support-go"
+	"github.com/transientvariable/anchor"
 )
 
 // formatSliceSuffix defines the format string for configuration paths that map to elements of a slice.
