@@ -6,7 +6,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/multiformats/go-multiaddr v0.15.0
 	github.com/timberio/go-datemath v0.1.0
-	github.com/transientvariable/anchor v0.0.0-20250330182342-0a84fe940535
+	github.com/transientvariable/anchor v0.0.0-20250331021423-92af82ab0491
 	gopkg.in/yaml.v3 v3.0.1
 )
 
