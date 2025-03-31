@@ -226,7 +226,7 @@ func (c *configuration) String() string {
 	m["file_path"] = c.filePath
 	m["mapping"] = c.mapping
 	m["root"] = c.root
-	return string(support.ToJSONFormatted(m))
+	return string(anchor.ToJSONFormatted(m))
 }
 
 // Bool retrieves the boolean value for the provided path.
