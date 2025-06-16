@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -14,7 +15,7 @@ const (
 	testDataDir         = "./testdata"
 	testConfigFile      = testDataDir + "/application.yaml"
 	testEnvVarTimeName  = "TEST_APP_TIME"
-	testEnvVarTimeValue = `2025-05-13T01:38:00Z` // format time.RFC3339
+	testEnvVarTimeValue = ` 2025-05-13T01:38:00Z ` // format time.RFC3339
 )
 
 type ConfigTestSuite struct {
@@ -56,6 +57,6 @@ func (t *ConfigTestSuite) TestConfig_Values() {
 	assert.Equal(t.T(), IntMustResolve(v.Join("int").String()), 138)
 	assert.Equal(t.T(), MultiaddrMustResolve(v.Join("multiaddr").String()).String(), "/dns4/example.com/tcp/9003")
 	assert.Equal(t.T(), SizeBytesMustResolve(v.Join("sizeBytes").String()), int64(1048576))
-	assert.Equal(t.T(), TimeMustResolve(v.Join("time").String()).Format(time.RFC3339), testEnvVarTimeValue)
+	assert.Equal(t.T(), TimeMustResolve(v.Join("time").String()).Format(time.RFC3339), strings.TrimSpace(testEnvVarTimeValue))
 	assert.Equal(t.T(), URLMustResolve(v.Join("url").String()).String(), "https://example.com:9003")
 }

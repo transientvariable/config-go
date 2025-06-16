@@ -122,7 +122,7 @@ func flatten(path string, value reflect.Value, data map[Path]string) error {
 		return fmt.Errorf("unknown value type [%s] for path [%s]\nusing data: %s\n", value, path, anchor.ToJSONFormatted(data))
 	}
 
-	data[Path(path)] = reflectedValue
+	data[Path(path)] = strings.TrimSpace(reflectedValue)
 	return nil
 }
 

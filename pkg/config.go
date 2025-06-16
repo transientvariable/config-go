@@ -86,32 +86,22 @@ func Load(options ...func(*Option)) error {
 		config = &configuration{
 			filePath: filePath,
 			mapping:  mapping,
+			root:     defaultRoot,
 		}
 
 		for p, v := range config.mapping {
 			config.mapping[p] = interpolate(regexp.MustCompile(placeholderPattern), placeholderTemplate, v)
 		}
 
+		r := config.root.String()
 		for _, key := range config.mapping.keys() {
 			p := strings.Split(key.String(), ".")
 			if s := strings.TrimSpace(p[0]); s != "" {
-				switch {
-				case config.root.Empty():
-					config.root = Path(s)
-					break
-				case config.root.String() != s:
+				if !strings.EqualFold(s, r) {
 					loadErr = fmt.Errorf("configuration: multiple root paths defined: %s", s)
 					break
-				default:
-					loadErr = fmt.Errorf("configuration: invalid configuration root: %s", s)
-					return
 				}
 			}
-		}
-
-		if config.root == "" {
-			config.root = defaultRoot
-			//loadErr = errors.New(fmt.Sprintf("configuration: root path is undefined"))
 		}
 	})
 	return loadErr
@@ -337,7 +327,7 @@ func interpolate(pattern *regexp.Regexp, template string, value string) string {
 		replacement := interpolateValue(placeholderValue, placeholderValueDelimiter)
 		value = strings.Replace(value, match, replacement, -1)
 	}
-	return value
+	return strings.TrimSpace(value)
 }
 
 func findAllMatchesOf(pattern *regexp.Regexp, template string, value string) []string {
