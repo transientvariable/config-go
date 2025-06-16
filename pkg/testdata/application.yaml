@@ -1,0 +1,81 @@
+# ================================================
+# Test Configuration
+# ================================================
+
+# Property values that use the placeholder syntax `${ ... }` are resolved via environment variables. For examples, on a
+# POSIX system, the following variable could be defined in `.bashrc`, `.profile`, `.bash_profile`, or via the command
+# line:
+#
+#   export FOO="bar"
+#
+# which could then be referenced by value:
+#
+#   some-application-property: ${FOO}
+#
+# At runtime, the value for `some-application-property` would be `bar`.
+#
+# The pipe `|` symbol can be used within a placeholder to specify a default value if an environment variable cannot be
+# resolved. For examples:
+#
+#   required-application-property: ${DOES_NOT_EXIST | baz}
+#
+# At runtime, the value for `required-application-property` would be `baz` if the environment variable `DOES_NOT_EXIST`
+# was not set.
+
+config:
+
+  # General application configuration.
+  application:
+
+    # Sets the name of the application.
+    name: test-app
+
+    # Sets the application version.
+    version: v1.0.0
+
+  value:
+
+    # Sets the boolean configuration value.
+    bool: ${TEST_APP_BOOL | true}
+
+    # Sets the duration configuration value.
+    #
+    # The value for the duration must be an unsigned sequence of decimal numbers followed by a time unit suffix. Valid
+    # time units: ns|us|µs|ms|s|m|h
+    #
+    # Example: 30s
+    #
+    duration: ${TEST_APP_DURATION | 30s}
+
+    # Sets the float configuration value.
+    float: ${TEST_APP_FLOAT | 1.168}
+
+    # Sets the integer configuration value.
+    int: ${TEST_APP_INT | 138}
+
+    # Sets the multiaddr configuration value.
+    #
+    # See the Multiformats Multiaddr specification: https://multiformats.io/multiaddr/
+    #
+    # Examples:
+    #   /ip4/0.0.0.0/tcp/9094
+    #   /dns4/ipfs-cluster/tcp/9094
+    #
+    multiaddr: ${TEST_APP_MULTIADDR | /dns4/example.com/tcp/9003}
+
+    # Sets the size configuration value.
+    #
+    # The value must be an unsigned sequence of decimal numbers followed by a size unit suffix in SI or IEC
+    # standard units.
+    #
+    # Examples:
+    #   SI:  512 kb, 5Mb
+    #   IEC: 512 KiB, 5MiB
+    #
+    sizeBytes: ${TEST_APP_SIZE_BYTES | 1MiB}
+
+    # Sets the time configuration value.
+    time: ${TEST_APP_TIME | }
+
+    # Sets the URL configuration value.
+    url: ${TEST_APP_URL | https://example.com:9003}

@@ -33,5 +33,36 @@ Compact, no frills, configuration library for Go.
 ❯ go get -u github.com/transientvariable/config-go
 ----
 
+== Usage
+Configuration property values are specified using a configuration file (e.g. YAML) whose default values can be overridden using environment variables.
+
+Using an environment variable override:
+
+.Example application.yaml
+[source,yaml]
+----
+config:
+  api:
+    url: ${APP_API_URL | https://example.com}
+----
+
+=== Property Value Syntax
+
+Property values that use the placeholder syntax `${ ... }` are resolved via environment variables. For example, on a POSIX system, the following variable could be defined in `.bashrc`, `.profile`, `.bash_profile`, or via the command-line:
+
+  export FOO="bar"
+
+which could then be referenced by value:
+
+  someApplicationProperty: ${FOO}
+
+At runtime, the value for `someApplicationProperty` would be `bar`.
+
+The pipe `|` symbol can be used within a placeholder to specify a default value if an environment variable cannot be resolved. For example:
+
+  requiredApplicationProperty: ${DOES_NOT_EXIST | baz}
+
+At runtime, the value for `requiredApplicationProperty` would be `baz` if the environment variable `DOES_NOT_EXIST` was not set.
+
 == License
 This project is licensed under the link:LICENSE[MIT License].

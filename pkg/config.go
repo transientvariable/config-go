@@ -3,19 +3,13 @@ package config
 import (
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/transientvariable/anchor"
 
-	"github.com/dustin/go-humanize"
-	"github.com/multiformats/go-multiaddr"
-	"github.com/timberio/go-datemath"
 	"gopkg.in/yaml.v3"
 )
 
@@ -106,10 +100,10 @@ func Load(options ...func(*Option)) error {
 					config.root = Path(s)
 					break
 				case config.root.String() != s:
-					loadErr = errors.New(fmt.Sprintf("configuration: multiple root paths defined: %s", s))
+					loadErr = fmt.Errorf("configuration: multiple root paths defined: %s", s)
 					break
 				default:
-					loadErr = errors.New(fmt.Sprintf("configuration: invalid configuration root: %s", s))
+					loadErr = fmt.Errorf("configuration: invalid configuration root: %s", s)
 					return
 				}
 			}
@@ -217,6 +211,13 @@ func (c *configuration) values(path Path) ([]string, error) {
 	return values, nil
 }
 
+// Size returns the current number configuration paths.
+func Size() int {
+	config.mutex.RLock()
+	defer config.mutex.RUnlock()
+	return len(config.mapping)
+}
+
 // String returns a string representation of the configuration.
 func (c *configuration) String() string {
 	c.mutex.RLock()
@@ -229,132 +230,12 @@ func (c *configuration) String() string {
 	return string(anchor.ToJSONFormatted(m))
 }
 
-// Bool retrieves the boolean value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a boolean
-func Bool(path string) (bool, error) {
-	v, err := Value(path)
-	if err != nil {
-		return false, err
-	}
-	return strconv.ParseBool(v)
-}
-
-// BoolMustResolve is similar behavior to Bool, but panics if an error occurs.
-func BoolMustResolve(path string) bool {
-	v, err := Bool(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// Duration retrieves the time.Duration value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a Duration
-func Duration(path string) (time.Duration, error) {
-	v, err := Value(path)
-	if err != nil {
-		return 0, err
-	}
-	return time.ParseDuration(v)
-}
-
-// DurationMustResolve is similar behavior to Duration, but panics if an error occurs.
-func DurationMustResolve(path string) time.Duration {
-	v, err := Duration(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// Float retrieves the float value for the provided path.
-//
-// The returned error will be non-nil and the returned float value will be set to 0 if the value corresponding to the
-// provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a float
-func Float(path string) (float64, error) {
-	v, err := Value(path)
-	if err != nil {
-		return 0, err
-	}
-
-	if v == "" {
-		return 0, nil
-	}
-	return strconv.ParseFloat(v, 64)
-}
-
-// FloatMustResolve is similar behavior to Float, but panics if an error occurs.
-func FloatMustResolve(path string) float64 {
-	v, err := Float(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
 // HasPath checks whether a configuration value is present for the provided path.
 func HasPath(path string) (bool, error) {
 	if config == nil {
 		return false, fmt.Errorf("configuration: %w", ErrNotInitialized)
 	}
 	return config.hasPath(Path(path)), nil
-}
-
-// Int retrieves the integer value for the provided path.
-//
-// The returned error will be non-nil and the returned integer value will be set to 0 if the value corresponding to the
-// provided path:
-//   - could not be found
-//   - was found, but could not be parsed as an integer
-func Int(path string) (int, error) {
-	v, err := Value(path)
-	if err != nil {
-		return 0, err
-	}
-
-	if v == "" {
-		return 0, nil
-	}
-	return strconv.Atoi(v)
-}
-
-// IntMustResolve is similar behavior to Int, but panics if an error occurs.
-func IntMustResolve(path string) int {
-	v, err := Int(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// Multiaddr retrieves the multiaddr.Multiaddr value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a multiaddr.Multiaddr value
-func Multiaddr(path string) (multiaddr.Multiaddr, error) {
-	v, err := Value(path)
-	if err != nil {
-		return nil, err
-	}
-	return multiaddr.NewMultiaddr(v)
-}
-
-// MultiaddrMustResolve is similar in behavior to Multiaddr, but panics if an error occurs.
-func MultiaddrMustResolve(path string) multiaddr.Multiaddr {
-	v, err := Multiaddr(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }
 
 // Root returns the root configuration Path.
@@ -375,37 +256,6 @@ func Set(path string, value string) (bool, error) {
 		return false, fmt.Errorf("configuration: %w", ErrNotInitialized)
 	}
 	return config.set(Path(path), value), nil
-}
-
-// Size retrieves the size value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a size value
-func Size(path string) (int64, error) {
-	v, err := Value(path)
-	if err != nil {
-		return 0, err
-	}
-
-	if v == "" {
-		return 0, nil
-	}
-
-	s, err := humanize.ParseBytes(v)
-	if err != nil {
-		return 0, err
-	}
-	return int64(s), nil
-}
-
-// SizeMustResolve is similar behavior to Size, but panics if an error occurs.
-func SizeMustResolve(path string) int64 {
-	v, err := Size(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }
 
 // Sub returns the sub-paths for the provided path.
@@ -433,85 +283,6 @@ func Sub(path string) ([]Path, error) {
 		}
 	}
 	return paths, nil
-}
-
-// Time retrieves the time value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a time.Time value
-func Time(path string) (time.Time, error) {
-	v, err := Value(path)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	expr, err := datemath.Parse(v)
-	if err != nil {
-		return time.Time{}, err
-	}
-	return expr.Time(), nil
-}
-
-// TimeMustResolve is similar behavior to Time, but panics if an error occurs.
-func TimeMustResolve(path string) time.Time {
-	v, err := Time(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// URL retrieves the url.URL value for the provided path.
-//
-// The returned error will be non-nil if the value corresponding to the provided path:
-//   - could not be found
-//   - was found, but could not be parsed as a url.URL value
-func URL(path string) (*url.URL, error) {
-	v, err := Value(path)
-	if err != nil {
-		return nil, err
-	}
-	return url.Parse(v)
-}
-
-// URLMustResolve is similar in behavior to URL, but panics if an error occurs.
-func URLMustResolve(path string) *url.URL {
-	v, err := URL(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// Value retrieves the value for the provided path.
-//
-// The returned error will be non-nil if:
-//   - the configuration has not been initialized
-//   - the value corresponding to the provided path could not be found
-func Value(path string) (string, error) {
-	if config == nil {
-		return "", fmt.Errorf("configuration: %w", ErrNotInitialized)
-	}
-	return config.value(Path(path))
-}
-
-// ValueMustResolve is similar behavior to Value, but panics if an error occurs.
-func ValueMustResolve(path string) string {
-	v, err := Value(path)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// ValuesMustResolve is similar behavior to values, but panics if an error occurs.
-func ValuesMustResolve(path string) []string {
-	v, err := config.values(Path(path))
-	if err != nil {
-		panic(err)
-	}
-	return v
 }
 
 // String returns a string representation of the configuration.

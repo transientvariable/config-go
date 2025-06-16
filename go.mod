@@ -5,12 +5,14 @@ go 1.24.1
 require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/multiformats/go-multiaddr v0.15.0
+	github.com/stretchr/testify v1.10.0
 	github.com/timberio/go-datemath v0.1.0
 	github.com/transientvariable/anchor v0.0.0-20250331040147-31a7b773ebd9
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ipfs/go-cid v0.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
@@ -24,9 +26,9 @@ require (
 	github.com/multiformats/go-multibase v0.2.0 // indirect
 	github.com/multiformats/go-multihash v0.2.3 // indirect
 	github.com/multiformats/go-varint v0.0.7 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/stretchr/testify v1.10.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
 	golang.org/x/sys v0.32.0 // indirect

@@ -47,7 +47,7 @@ func (p Path) Join(path Path) Path {
 	return Path(p.String() + "." + path.String())
 }
 
-// MarshalText implements encoding.TextMarshaler for the Path.
+// MarshalText implements encoding.TextMarshaller for the Path.
 func (p Path) MarshalText() ([]byte, error) {
 	return []byte(p.String()), nil
 }

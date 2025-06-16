@@ -35,6 +35,7 @@ clean:
 .PHONY: check
 check:
 	@printf "\033[2m→ No checks for this repository at this time...\033[0m\n"
+	@go test ./...
 
 .PHONY: build.all
 build.all: clean build
